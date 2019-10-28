@@ -15,88 +15,20 @@ import ui
 # data manager module
 import data_manager
 # common module
-import common
+from common import add, remove, update, show_table, sorting
 
 
 def start_module():
-    """
-    Starts this module and displays its menu.
-     * User can access default special features from here.
-     * User can go back to main menu from here.
-
-    Returns:
-        None
-    """
-
-    # your code
-
-
-def show_table(table):
-    """
-    Display a table
-
-    Args:
-        table (list): list of lists to be displayed.
-
-    Returns:
-        None
-    """
-
-    # your code
-
-
-def add(table):
-    """
-    Asks user for input and adds it into the table.
-
-    Args:
-        table (list): table to add new record to
-
-    Returns:
-        list: Table with a new record
-    """
-
-    # your code
-
-    return table
-
-
-def remove(table, id_):
-    """
-    Remove a record with a given id from the table.
-
-    Args:
-        table (list): table to remove a record from
-        id_ (str): id of a record to be removed
-
-    Returns:
-        list: Table without specified record.
-    """
-
-    # your code
-
-    return table
-
-
-def update(table, id_):
-    """
-    Updates specified record in the table. Ask users for new data.
-
-    Args:
-        table: list in which record should be updated
-        id_ (str): id of a record to update
-
-    Returns:
-        list: table with updated record
-    """
-
-    # your code
-
-    return table
-
+    menu = True
+    while menu:
+        handle_menu()
+        try:
+            menu = choose(menu)
+        except KeyError as err:
+            ui.print_error_message(str(err))
 
 # special functions:
-# ------------------
+
 
 def get_counts_by_manufacturers(table):
     """
@@ -110,6 +42,20 @@ def get_counts_by_manufacturers(table):
     """
 
     # your code
+    list_of_genres = []
+    for line in table:
+        if line[2] not in list_of_genres:
+            list_of_genres.append(line[2])
+        else:
+            continue
+    dic_of_genres = {}
+    for i in range(len(list_of_genres)):
+        k = 0
+        for line in table:
+            if line[2] == list_of_genres[i]:
+                k += 1
+        dic_of_genres.update({list_of_genres[i]: k})
+    return dic_of_genres
 
 
 def get_average_by_manufacturer(table, manufacturer):
@@ -125,3 +71,52 @@ def get_average_by_manufacturer(table, manufacturer):
     """
 
     # your code
+    list_of_games = []
+    for line in table:
+        if line[2].lower() == manufacturer.lower():
+            list_of_games.append(int(line[4]))
+    i = 0
+    sum = 0
+    while i < len(list_of_games):
+        sum += list_of_games[i]
+        i += 1
+    avg = sum / len(list_of_games)
+    return avg
+
+def choose(menu):
+    file_name = "store/games.csv"
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    option = inputs[0]
+    main_list = ["Press ENTER to continue...", "Title: ", "Manifacturer: ", "Price: ", "In_stock: "]
+    if option == "1":
+        show_table(main_list, data_manager.get_table_from_file(file_name))
+    elif option == "2":
+        table = add(data_manager.get_table_from_file(file_name),
+                    ui.get_inputs(main_list, "Please provide the following information:"))
+        data_manager.write_table_to_file(file_name, table)
+    elif option == "3":
+        table = remove(data_manager.get_table_from_file(file_name),
+                       ui.get_inputs(["ID: "], "Please provide the following information:"))
+        data_manager.write_table_to_file(file_name, table)
+    elif option == "4":
+        table = update(data_manager.get_table_from_file(file_name),
+                       ui.get_inputs(["ID"], "Please provide the ID to identify the elemnt:"),
+                       ui.get_inputs(main_list, "Please provide the following information to complete the update"))
+        data_manager.write_table_to_file(file_name, table)
+    elif option == "5":
+        ui.print_result(get_counts_by_manufacturers(data_manager.get_table_from_file(file_name)),"")
+    elif option == "6":
+        manufacturer = ui.get_inputs(["Manifacturer: "],
+                                     "To calculate the avg. amount please specify which manifacturer you want to select.")[0]
+        ui.print_result(get_average_by_manufacturer(data_manager.get_table_from_file(file_name), manufacturer), "")
+    elif option == "0":
+        return False
+
+    else:
+        raise KeyError("There is no such option.")
+    return True
+
+def handle_menu():
+    options = ["Show table", "Add", "Remove", "Update", "sf1", "sf2"]
+
+    ui.print_menu("Sales manager", options, "Back to main menu")

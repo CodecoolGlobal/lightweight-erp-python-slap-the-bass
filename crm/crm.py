@@ -7,97 +7,27 @@ Data table structure:
     * email (string)
     * subscribed (int): Is she/he subscribed to the newsletter? 1/0 = yes/no
 """
-
 # everything you'll need is imported:
 # User interface module
 import ui
 # data manager module
 import data_manager
 # common module
-import common
+from common import show_table, add, remove, update, sorting
 
 
 def start_module():
-    """
-    Starts this module and displays its menu.
-     * User can access default special features from here.
-     * User can go back to main menu from here.
-
-    Returns:
-        None
-    """
-
-    # your code
-
-
-def show_table(table):
-    """
-    Display a table
-
-    Args:
-        table (list): list of lists to be displayed.
-
-    Returns:
-        None
-    """
-
-    # your code
-
-
-def add(table):
-    """
-    Asks user for input and adds it into the table.
-
-    Args:
-        table (list): table to add new record to
-
-    Returns:
-        list: Table with a new record
-    """
-
-    # your code
-
-    return table
-
-
-def remove(table, id_):
-    """
-    Remove a record with a given id from the table.
-
-    Args:
-        table (list): table to remove a record from
-        id_ (str): id of a record to be removed
-
-    Returns:
-        list: Table without specified record.
-    """
-
-    # your code
-
-    return table
-
-
-def update(table, id_):
-    """
-    Updates specified record in the table. Ask users for new data.
-
-    Args:
-        table (list): list in which record should be updated
-        id_ (str): id of a record to update
-
-    Returns:
-        list: table with updated record
-    """
-
-    # your code
-
-    return table
-
+    menu = True
+    while menu:
+        handle_menu()
+        try:
+            menu = choose(menu)
+        except KeyError as err:
+            ui.print_error_message(str(err))
 
 # special functions:
-# ------------------
+def get_longest_name_id(table):  # table
 
-def get_longest_name_id(table):
     """
         Question: What is the id of the customer with the longest name?
 
@@ -110,6 +40,23 @@ def get_longest_name_id(table):
         """
 
     # your code
+    longest = 0
+    name_list = []
+    for i in range(len(table)):
+        if len(table[i][1]) > longest:
+            longest = len(table[i][1])
+    reli = []
+    for i in range(len(table)):
+        if len(table[i][1]) == longest:
+            reli.append(table[i][0])
+            name_list.append(table[i][1])
+    sorting(name_list)
+    name_list = name_list[::-1]
+    longest_name = name_list[0]
+    for i in range(len(table)):
+        if table[i][1] == longest_name:
+            return table[i][0]
+
 
 
 # the question: Which customers has subscribed to the newsletter?
@@ -126,3 +73,46 @@ def get_subscribed_emails(table):
         """
 
     # your code
+    l = []
+    for i in range(len(table)):
+        if table[i][-1] == "1":
+            l.append(str(table[i][2]) + ";" + str(table[i][1]))
+    return l
+
+    # your code
+def choose(menu):
+    inputs = ui.get_inputs(["Please enter a number: "], "")
+    option = inputs[0]
+    if option == "1":
+        show_table(["Press ENTER to continue...", "Name", "E-mail", "Subscribed"] ,data_manager.get_table_from_file("crm/customers.csv"))
+    elif option == "2":
+        table = add(data_manager.get_table_from_file("crm/customers.csv"),
+               ui.get_inputs(["Press ENTER to continue...", "Name: ", "E-mail: ", "Subscribed: "], "Please provide the following information:"))
+        data_manager.write_table_to_file("crm/customers.csv", table)
+    elif option == "3":
+        table = remove(data_manager.get_table_from_file("crm/customers.csv"),
+                  ui.get_inputs(["ID: "], "Please provide the following information:"))
+        data_manager.write_table_to_file("crm/customers.csv", table)
+    elif option == "4":
+        table = update(data_manager.get_table_from_file("crm/customers.csv"),
+                  ui.get_inputs(["ID"], "Please provide the ID to identify the elemnt:"),
+                  ui.get_inputs(["ID", "Name", "E-mail", "Subscribed"], "Please provide the following information to complete the update:"))
+        data_manager.write_table_to_file("crm/customers.csv", table)
+    elif option == "5":
+        ui.print_result(get_longest_name_id(data_manager.get_table_from_file("crm/customers.csv")), "")
+    elif option == "6":
+        ui.print_result(get_subscribed_emails(data_manager.get_table_from_file("crm/customers.csv")), "")
+    elif option == "0":
+        return False
+
+    else:
+        raise KeyError("There is no such option.")
+    return True
+
+def handle_menu():
+    options = ["Show table","Add","Remove","Update","Get longest name by ID", "Get Subscriber E-mails"]
+
+    ui.print_menu("Customer Relationship Management (CRM)", options, "Back to main menu")
+
+
+

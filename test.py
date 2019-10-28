@@ -15,7 +15,6 @@ from sales import sales
 # Customer Relationship Management (CRM) module
 from crm import crm
 
-
 def compare_lists(tester, expected_list, result_list):
     if len(expected_list) == 0 and len(result_list) == 0:
         return
