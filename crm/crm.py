@@ -73,7 +73,6 @@ def get_subscribed_emails(table):
         """
 
     # your code
-<<<<<<< HEAD
     l = []
     for i in range(len(table)):
         if table[i][-1] == "1":
@@ -103,6 +102,11 @@ def choose(menu):
         ui.print_result(get_longest_name_id(data_manager.get_table_from_file("crm/customers.csv")), "")
     elif option == "6":
         ui.print_result(get_subscribed_emails(data_manager.get_table_from_file("crm/customers.csv")), "")
+    elif option == "7":
+        ui.print_result(get_name_by_id("kH94Jc#&"),"")
+    elif option == "8":
+        pass
+        
     elif option == "0":
         return False
 
@@ -111,13 +115,12 @@ def choose(menu):
     return True
 
 def handle_menu():
-    options = ["Show table","Add","Remove","Update","Get longest name by ID", "Get Subscriber E-mails"]
+    options = ["Show table","Add","Remove","Update","Get longest name by ID", "Get Subscriber E-mails","Name by ID","Name by ID from table"]
 
     ui.print_menu("Customer Relationship Management (CRM)", options, "Back to main menu")
 
 
 
-=======
 
 
 # functions supports data analyser
@@ -137,7 +140,11 @@ def get_name_by_id(id):
     """
 
     # your code
-
+    table=data_manager.get_table_from_file("crm/customers.csv")
+    for line in table:
+        if line[0]==id:
+            return line[1]
+    return None
 
 
 def get_name_by_id_from_table(table, id):
@@ -153,4 +160,7 @@ def get_name_by_id_from_table(table, id):
     """
 
     # your code
->>>>>>> origin/week2
+    for line in table:
+        if line[0]==id:
+            return line[1]
+    return None

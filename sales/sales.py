@@ -76,7 +76,6 @@ def get_items_sold_between(table, month_from, day_from, year_from, month_to, day
         list: list of lists (the filtered table)
     """
     # your code
-<<<<<<< HEAD
     yf = year_from * 365
     mf = month_from * 30
     df = day_from
@@ -94,11 +93,13 @@ def get_items_sold_between(table, month_from, day_from, year_from, month_to, day
     for list in reli:
         new_list = []
         for i in range(len(list)):
-            if i <= 1:
+            if i<2 or i==len(list)-1:
                 new_list.append(list[i])
             else:
                 new_list.append(int(list[i]))
+                
         result_list.append(new_list)
+    
     return result_list
 
 def choose(menu):
@@ -133,117 +134,220 @@ def choose(menu):
     return True
 
 def handle_menu():
-    options = ["Show table", "Add", "Remove", "Update", "sf1", "sf2"]
+    options = ["Show table", "Add", "Remove", "Update", "Lowest price item", "Items sold between dates"]
 
     ui.print_menu("Sales manager", options, "Back to main menu")
-=======
-
 
 # functions supports data abalyser
 # --------------------------------
-
-
+ 
 def get_title_by_id(id):
-
+ 
     """
-    Reads the table with the help of the data_manager module.
-    Returns the title (str) of the item with the given id (str) on None om case of non-existing id.
-
-    Args:
-        id (str): the id of the item
-
-    Returns:
-        str: the title of the item
-    """
-
+   Reads the table with the help of the data_manager module.
+   Returns the title (str) of the item with the given id (str) on None om case of non-existing id.
+ 
+   Args:
+       id (str): the id of the item
+ 
+   Returns:
+       str: the title of the item
+   """
+ 
     # your code
-
-
+    table = data_manager.get_table_from_file("sales/sales_test.csv")
+    for item in table:
+        if id == item[0]:
+            return item[1]
+    return None
+ 
 def get_title_by_id_from_table(table, id):
-
+ 
     """
-    Returns the title (str) of the item with the given id (str) on None om case of non-existing id.
-
-    Args:
-        table (list of lists): the sales table
-        id (str): the id of the item
-
-    Returns:
-        str: the title of the item
-    """
-
+   Returns the title (str) of the item with the given id (str) on None om case of non-existing id.
+ 
+   Args:
+       table (list of lists): the sales table
+       id (str): the id of the item
+ 
+   Returns:
+       str: the title of the item
+   """
+ 
     # your code
-
-
+    for item in table:
+        if id == item[0]:
+            return item[1]
+    return None
+ 
 def get_item_id_sold_last():
     """
-    Reads the table with the help of the data_manager module.
-    Returns the _id_ of the item that was sold most recently.
-
-    Returns:
-        str: the _id_ of the item that was sold most recently.
-    """
-
+   Reads the table with the help of the data_manager module.
+   Returns the _id_ of the item that was sold most recently.
+ 
+   Returns:
+       str: the _id_ of the item that was sold most recently.
+   """
+ 
     # your code
-
-
+    table = data_manager.get_table_from_file("sales/sales_test.csv")
+    list_of_dates = []
+    for i in range(len(table)):
+        year = table[i][5]
+        if len(table[i][4]) == 1:
+            day = "0" + table[i][4]
+        else:
+            day = table[i][4]
+        if len(table[i][3]) == 1:
+            mth = "0" + table[i][3]
+        else:
+            mth = table[i][3]
+        temp = year + mth + day
+        list_of_dates.append(int(temp))
+    max = list_of_dates[0]
+    for i in range(len(list_of_dates)):
+        for j in range(len(list_of_dates)):
+            if list_of_dates[i] >= list_of_dates[j]:
+                if max < list_of_dates[i]:
+                    max = list_of_dates[i]
+    checker = str(max)
+    month_day = ""
+    for i in range(4, len(checker)):
+        month_day += checker[i]
+    date = month_day + checker[0] + checker[1] + checker[2] + checker[3]
+    for i in range(len(table)):
+        line = table[i][3] + table[i][4] + table[i][5]
+        if date == line:
+            return table[i][0]
+ 
 def get_item_id_sold_last_from_table(table):
     """
-    Returns the _id_ of the item that was sold most recently.
-
-    Args:
-        table (list of lists): the sales table
-
-    Returns:
-        str: the _id_ of the item that was sold most recently.
-    """
-
+   Returns the _id_ of the item that was sold most recently.
+ 
+   Args:
+       table (list of lists): the sales table
+ 
+   Returns:
+       str: the _id_ of the item that was sold most recently.
+   """
+ 
     # your code
-
-
+    list_of_dates = []
+    for i in range(len(table)):
+        year = table[i][5]
+        if len(table[i][4]) == 1:
+            day = "0" + table[i][4]
+        else:
+            day = table[i][4]
+        if len(table[i][3]) == 1:
+            mth = "0" + table[i][3]
+        else:
+            mth = table[i][3]
+        temp = year + mth + day
+        list_of_dates.append(int(temp))
+    max = list_of_dates[0]
+    for i in range(len(list_of_dates)):
+        for j in range(len(list_of_dates)):
+            if list_of_dates[i] >= list_of_dates[j]:
+                if max < list_of_dates[i]:
+                    max = list_of_dates[i]
+    checker = str(max)
+    month_day = ""
+    for i in range(4, len(checker)):
+        month_day += checker[i]
+    date = month_day + checker[0] + checker[1] + checker[2] + checker[3]
+    for i in range(len(table)):
+        line = table[i][3] + table[i][4] + table[i][5]
+        if date == line:
+            return table[i][0]
+ 
 def get_item_title_sold_last_from_table(table):
     """
-    Returns the _title_ of the item that was sold most recently.
-
-    Args:
-        table (list of lists): the sales table
-
-    Returns:
-        str: the _title_ of the item that was sold most recently.
-    """
-
+   Returns the _title_ of the item that was sold most recently.
+ 
+   Args:
+       table (list of lists): the sales table
+ 
+   Returns:
+       str: the _title_ of the item that was sold most recently.
+   """
+ 
     # your code
-
-
+    list_of_dates = []
+    for i in range(len(table)):
+        year = table[i][5]
+        if len(table[i][4]) == 1:
+            day = "0" + table[i][4]
+        else:
+            day = table[i][4]
+        if len(table[i][3]) == 1:
+            mth = "0" + table[i][3]
+        else:
+            mth = table[i][3]
+        temp = year + mth + day
+        list_of_dates.append(int(temp))
+    max = list_of_dates[0]
+    for i in range(len(list_of_dates)):
+        for j in range(len(list_of_dates)):
+            if list_of_dates[i] >= list_of_dates[j]:
+                if max < list_of_dates[i]:
+                    max = list_of_dates[i]
+    checker = str(max)
+    month_day = ""
+    for i in range(4, len(checker)):
+        month_day += checker[i]
+    date = month_day + checker[0] + checker[1] + checker[2] + checker[3]
+    for i in range(len(table)):
+        line = table[i][3] + table[i][4] + table[i][5]
+        if date == line:
+            return table[i][1]
+ 
 def get_the_sum_of_prices(item_ids):
     """
-    Reads the table of sales with the help of the data_manager module.
-    Returns the sum of the prices of the items in the item_ids.
-
-    Args:
-        item_ids (list of str): the ids
-
-    Returns:
-        number: the sum of the items' prices
-    """
-
-    # your code
-
-
+   Reads the table of sales with the help of the data_manager module.
+   Returns the sum of the prices of the items in the item_ids.
+ 
+   Args:
+       item_ids (list of str): the ids
+ 
+   Returns:
+       number: the sum of the items' prices
+   """
+ 
+    # your code[6]
+    table = data_manager.get_table_from_file("sales/sales_test.csv")
+    list_of_prices = []
+    for i in range(len(item_ids)):
+        for item in table:
+            if item[0] == item_ids[i]:
+                list_of_prices.append(item[2])
+    sum = 0
+    for num in list_of_prices:
+        sum += int(num)
+    return sum
+ 
 def get_the_sum_of_prices_from_table(table, item_ids):
     """
-    Returns the sum of the prices of the items in the item_ids.
-
-    Args:
-        table (list of lists): the sales table
-        item_ids (list of str): the ids
-
-    Returns:
-        number: the sum of the items' prices
-    """
-
+   Returns the sum of the prices of the items in the item_ids.
+ 
+   Args:
+       table (list of lists): the sales table
+       item_ids (list of str): the ids
+ 
+   Returns:
+       number: the sum of the items' prices
+   """
+ 
     # your code
-
+    list_of_prices = []
+    for i in range(len(item_ids)):
+        for item in table:
+            if item[0] == item_ids[i]:
+                list_of_prices.append(item[2])
+    sum = 0
+    for num in list_of_prices:
+        sum += int(num)
+    return sum
 
 def get_customer_id_by_sale_id(sale_id):
     """
@@ -258,7 +362,11 @@ def get_customer_id_by_sale_id(sale_id):
     """
 
     # your code
-
+    table=data_manager.get_table_from_file("sales/sales_test.csv")
+    for i in range(len(table)):
+        if table[i][0]==sale_id:
+            return table[i][-1]
+    return None
 
 def get_customer_id_by_sale_id_from_table(table, sale_id):
     """
@@ -273,7 +381,10 @@ def get_customer_id_by_sale_id_from_table(table, sale_id):
     """
 
     # your code
-
+    for i in range(len(table)):
+        if table[i][0]==sale_id:
+            return table[i][-1]
+    return None
 
 def get_all_customer_ids():
     """
@@ -284,7 +395,11 @@ def get_all_customer_ids():
     """
 
     # your code
-
+    table=data_manager.get_table_from_file("sales/sales_test.csv")
+    c_ids=[]
+    for i in range(len(table)):
+        c_ids.append(str(table[i][-1]))
+    return set(c_ids)
 
 def get_all_customer_ids_from_table(table):
     """
@@ -295,9 +410,11 @@ def get_all_customer_ids_from_table(table):
     Returns:
          set of str: set of customer_ids that are present in the table
     """
-
     # your code
-
+    c_ids=[]
+    for i in range(len(table)):
+        c_ids.append(str(table[i][-1]))
+    return set(c_ids)
 
 def get_all_sales_ids_for_customer_ids():
     """
@@ -311,9 +428,17 @@ def get_all_sales_ids_for_customer_ids():
          (dict of (key, value): (customer_id, (list) sale_ids)) where the sale_ids list contains
             all the sales id belong to the given customer_id
     """
-
+    table=data_manager.get_table_from_file("sales/sales_test.csv")
+    dict_c={}
+    for i in range(len(table)):
+        if table[i][-1] not in dict_c:
+            salesOfID=[]
+            for j in range(len(table)):
+                if table[i][-1]==table[j][-1]:
+                    salesOfID.append(table[j][0])
+            dict_c.update({table[i][-1]:salesOfID})
+    return dict_c
     # your code
-
 
 def get_all_sales_ids_for_customer_ids_from_table(table):
     """
@@ -327,9 +452,16 @@ def get_all_sales_ids_for_customer_ids_from_table(table):
          (dict of (key, value): (customer_id, (list) sale_ids)) where the sale_ids list contains
          all the sales id belong to the given customer_id
     """
-
+    dict_c={}
+    for i in range(len(table)):
+        if table[i][-1] not in dict_c:
+            salesOfID=[]
+            for j in range(len(table)):
+                if table[i][-1]==table[j][-1]:
+                    salesOfID.append(table[j][0])
+            dict_c.update({table[i][-1]:salesOfID})
+    return dict_c
     # your code
-
 
 def get_num_of_sales_per_customer_ids():
     """
@@ -342,7 +474,14 @@ def get_num_of_sales_per_customer_ids():
     """
 
     # your code
-
+    table=data_manager.get_table_from_file("sales/sales_test.csv")
+    dict_c={}
+    for i in range(len(table)):
+        if table[i][-1] not in dict_c:
+            dict_c.update({table[i][-1]:1})
+        else:
+            dict_c[table[i][-1]]+=1
+    return dict_c
 
 def get_num_of_sales_per_customer_ids_from_table(table):
     """
@@ -354,6 +493,12 @@ def get_num_of_sales_per_customer_ids_from_table(table):
      Returns:
          dict of (key, value): (customer_id (str), num_of_sales (number))
     """
-
+    
     # your code
->>>>>>> origin/week2
+    dict_c={}
+    for i in range(len(table)):
+        if table[i][-1] not in dict_c:
+            dict_c.update({table[i][-1]:1})
+        else:
+            dict_c[table[i][-1]]+=1
+    return dict_c

@@ -117,6 +117,6 @@ def choose(menu):
     return True
 
 def handle_menu():
-    options = ["Show table", "Add", "Remove", "Update", "sf1", "sf2"]
+    options = ["Show table", "Add", "Remove", "Update", "Count by Manufacturers", "AVG by Manufacturers"]
 
     ui.print_menu("Sales manager", options, "Back to main menu")
